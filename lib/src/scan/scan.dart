@@ -10,9 +10,10 @@ class QrCodeScannerView extends StatefulWidget {
 
 class _QrCodeScannerViewState extends State<QrCodeScannerView> {
   final MobileScannerController controller = MobileScannerController(
-    torchEnabled: true,
+    torchEnabled: false,
   );
 
+  String barcode = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,20 +23,20 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 300,
-              height: 300,
+              width: 400,
+              height: 400,
               child: MobileScanner(
                 allowDuplicates: false,
                 fit: BoxFit.contain,
                 onDetect: (barcode, args) {
                   setState(() {
-                    // ignore: avoid_print
-                    print(barcode.rawValue);
+                    this.barcode = barcode.rawValue!;
                   });
                 },
                 controller: controller,
               ),
             ),
+            Text(barcode),
           ],
         ),
       ),
