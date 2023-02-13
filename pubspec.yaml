@@ -13,6 +13,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: 0.8.6+1
   mobile_scanner: ^2.1.0
+  sqflite: ^2.2.4+1
+  path_provider: ^2.0.12
+  path: 1.8.2
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +24,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/profile.jpg
