@@ -8,7 +8,7 @@ class DatabaseHelper {
   static const _databaseVersion = 1;
   static const table = 'member';
 
-  static const columnId = '_id';
+  static const columnId = 'id';
   static const columnName = 'name';
   static const columnOcupation = 'ocupation';
   static const columnCpf = 'cpf';
@@ -35,13 +35,12 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute("""
 CREATE TABLE $table (
-  $columnId INTEGER PRIMARY KEY AUTOINCREMENT
+  $columnId INTEGER PRIMARY KEY,
   $columnName TEXT NOT NULL,
   $columnCpf INTEGER NOT NULL,
   $columnOcupation TEXT NOT NULL,
-  $columnPhoto TEXT NOT NULL,
-  $columnStatus TEXT NOT NULL,
-)
+  $columnStatus TEXT NOT NULL
+);
 """);
   }
 

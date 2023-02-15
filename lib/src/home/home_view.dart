@@ -11,7 +11,9 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final dbHelper = DatabaseHelper.instance;
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController functionController = TextEditingController();
+  final TextEditingController ocupationController = TextEditingController();
+  final TextEditingController cpfController = TextEditingController();
+  final TextEditingController statusController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,33 +27,32 @@ class _HomeViewState extends State<HomeView> {
                 decoration: const InputDecoration(
                   label: Text("Nome"),
                 ),
-                onSubmitted: (value) {
-                  setState(
-                    () {
-                      functionController.text.toString();
-                    },
-                  );
-                },
               ),
               TextField(
-                controller: functionController,
+                controller: ocupationController,
                 decoration: const InputDecoration(
                   label: Text("Função"),
                 ),
-                onSubmitted: (value) {
-                  setState(
-                    () {
-                      functionController.text.toString();
-                    },
-                  );
+              ),
+              TextField(
+                controller: cpfController,
+                decoration: const InputDecoration(
+                  label: Text("CPF"),
+                ),
+              ),
+              TextField(
+                controller: statusController,
+                decoration: const InputDecoration(
+                  label: Text("Status"),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  errorFieldEmpty();
                 },
+                child: const Text('ok'),
               ),
-              Text(
-                nameController.text.toString(),
-              ),
-              Text(
-                functionController.text.toString(),
-              ),
+
               //Camera(),
               // ElevatedButton(
               //   onPressed: () {
@@ -72,8 +73,23 @@ class _HomeViewState extends State<HomeView> {
 
   void _insert() async {
     // linha para incluir
-    Map<String, dynamic> row = {};
-    final id = await dbHelper.insert(row);
-    print('linha inserida id: $id');
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnName: nameController.text.toString(),
+      DatabaseHelper.columnOcupation: nameController.text.toString(),
+      DatabaseHelper.columnCpf: cpfController.text.toString(),
+      DatabaseHelper.columnStatus: statusController.text.toString(),
+    };
+    await dbHelper.insert(row);
+  }
+
+  errorFieldEmpty() {
+    if (nameController.text.isEmpty ||
+        ocupationController.text.isEmpty ||
+        statusController.text.isEmpty ||
+        cpfController.text.isEmpty) {
+      return;
+    } else {
+      _insert();
+    }
   }
 }
