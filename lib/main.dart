@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qrcode/src/home/home_view.dart';
+import 'package:qrcode/src/users/users_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const HomeView(),
+      home: const UsersView(),
     );
   }
 }

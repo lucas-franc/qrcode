@@ -16,6 +16,7 @@ dependencies:
   sqflite: ^2.2.4+1
   path_provider: ^2.0.12
   path: 1.8.2
+  dropdown_button2: ^1.9.2
 
 dev_dependencies:
   flutter_test:

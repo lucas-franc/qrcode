@@ -1,19 +1,21 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:qrcode/src/models/user.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const _databaseName = "MembersDB";
+  static const _databaseName = "UsersDB";
   static const _databaseVersion = 1;
-  static const table = 'member';
+  static const table = 'user';
 
   static const columnId = 'id';
   static const columnName = 'name';
   static const columnOcupation = 'ocupation';
   static const columnCpf = 'cpf';
+  static const columnPhone = "phone";
+  static const columnEmail = "email";
   static const columnStatus = 'status';
-  static const columnPhoto = 'photo';
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -37,21 +39,28 @@ class DatabaseHelper {
 CREATE TABLE $table (
   $columnId INTEGER PRIMARY KEY,
   $columnName TEXT NOT NULL,
-  $columnCpf INTEGER NOT NULL,
+  $columnCpf TEXT NOT NULL,
   $columnOcupation TEXT NOT NULL,
+  $columnPhone TEXT NOT NULL,
+  $columnEmail TEXT NOT NULL,
   $columnStatus TEXT NOT NULL
 );
 """);
   }
 
-  Future<int> insert(Map<String, dynamic> row) async {
+  Future<int> insert(Map<String, dynamic> map) async {
     Database db = await instance.database;
-    return await db.insert(table, row);
+    return await db.insert(table, map);
   }
 
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
+  Future<List<User>> queryAllRows() async {
     Database db = await instance.database;
-    return await db.query(table);
+    var result = await db.query(table);
+
+    List<User> list = result.isNotEmpty
+        ? result.map((user) => User.fromMap(user)).toList()
+        : [];
+    return list;
   }
 
   Future<int?> queryRowCount() async {
@@ -60,10 +69,11 @@ CREATE TABLE $table (
         await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
 
-  Future<int> update(Map<String, dynamic> row) async {
+  Future<int> update(User user) async {
     Database db = await instance.database;
-    int id = row[columnId];
-    return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
+    int id = user.toMap()[columnId];
+    return await db
+        .update(table, user.toMap(), where: '$columnId = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
