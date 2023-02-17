@@ -63,12 +63,6 @@ CREATE TABLE $table (
     return list;
   }
 
-  Future<int?> queryRowCount() async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $table'));
-  }
-
   Future<int> update(User user) async {
     Database db = await instance.database;
     int id = user.toMap()[columnId];

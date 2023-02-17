@@ -1,23 +1,24 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:qrcode/src/database/database_helper.dart';
-import 'package:qrcode/src/models/user.dart';
-import 'package:qrcode/src/users/users_view.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:qrcode/src/views/register/register_confirmation_view.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+  const RegisterView({
+    super.key,
+  });
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final dbHelper = DatabaseHelper.instance;
-
   TextEditingController nameController = TextEditingController();
   TextEditingController ocupationController = TextEditingController();
-  TextEditingController cpfController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController cpfController =
+      MaskedTextController(mask: "000.000.000-00");
+  TextEditingController phoneController =
+      MaskedTextController(mask: "(00) 00 00000-0000");
   TextEditingController emailController = TextEditingController();
   TextEditingController statusController = TextEditingController();
   final List<String> items = [
@@ -126,18 +127,6 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  void _insert() async {
-    User user = User(
-      name: nameController.text.toString(),
-      ocupation: ocupationController.text.toString(),
-      cpf: cpfController.text.toString(),
-      phone: phoneController.text.toString(),
-      email: emailController.text.toString(),
-      status: selectedValue,
-    );
-    await dbHelper.insert(user.toMap());
-  }
-
   _verifyValues() {
     if (nameController.text.isNotEmpty &
         ocupationController.text.isNotEmpty &
@@ -145,10 +134,16 @@ class _RegisterViewState extends State<RegisterView> {
         phoneController.text.isNotEmpty &
         emailController.text.isNotEmpty &
         (selectedValue != null)) {
-      _insert();
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const UsersView(),
+          builder: (context) => RegisterConfirmationView(
+            name: nameController.text,
+            ocupation: ocupationController.text,
+            cpf: cpfController.text,
+            phone: phoneController.text,
+            email: emailController.text,
+            status: selectedValue,
+          ),
         ),
       );
     } else {

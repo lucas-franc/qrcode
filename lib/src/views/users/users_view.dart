@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrcode/src/database/database_helper.dart';
 import 'package:qrcode/src/models/user.dart';
-import 'package:qrcode/src/register/register_view.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({super.key});
@@ -42,18 +41,6 @@ class _UsersViewState extends State<UsersView> {
               return listUsers(context, index);
             },
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const RegisterView(),
-            ),
-          );
-        },
-        child: const Icon(
-          Icons.add,
         ),
       ),
     );
