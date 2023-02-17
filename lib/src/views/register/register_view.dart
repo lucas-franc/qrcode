@@ -1,7 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:qrcode/src/views/register/register_confirmation_view.dart';
+import 'package:qrcode/src/database/database_helper.dart';
+import 'package:qrcode/src/models/user.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({
@@ -13,6 +14,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final dbHelper = DatabaseHelper.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController ocupationController = TextEditingController();
   TextEditingController cpfController =
@@ -127,29 +129,109 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  _verifyValues() {
+  void _verifyValues() {
     if (nameController.text.isNotEmpty &
         ocupationController.text.isNotEmpty &
         cpfController.text.isNotEmpty &
         phoneController.text.isNotEmpty &
         emailController.text.isNotEmpty &
         (selectedValue != null)) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => RegisterConfirmationView(
-            name: nameController.text,
-            ocupation: ocupationController.text,
-            cpf: cpfController.text,
-            phone: phoneController.text,
-            email: emailController.text,
-            status: selectedValue,
-          ),
-        ),
-      );
+      _showDialog();
     } else {
       setState(() {
         emptyFieldError = "Preencha todos os campos!";
       });
     }
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            content: SizedBox(
+              height: 200,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    nameController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ocupationController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    cpfController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    phoneController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    emailController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    statusController.text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  _insert();
+                  _clearValues();
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Confirmar cadastro"),
+              ),
+            ]);
+      },
+    );
+  }
+
+  void _insert() async {
+    User user = User(
+      name: nameController.text,
+      ocupation: ocupationController.text,
+      cpf: cpfController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+      status: selectedValue,
+    );
+    await dbHelper.insert(user.toMap());
+  }
+
+  void _clearValues() {
+    nameController.clear();
+    ocupationController.clear();
+    cpfController.clear();
+    phoneController.clear();
+    emailController.clear();
+    statusController.clear();
   }
 }
