@@ -1,8 +1,10 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrcode/src/database/database_helper.dart';
 import 'package:qrcode/src/models/user.dart';
-import 'package:social_share/social_share.dart';
 
 class UserView extends StatefulWidget {
   final User user;
@@ -23,6 +25,9 @@ class _UserViewState extends State<UserView> {
   String? email;
   String? status;
   QrImage? qrImage;
+
+  GlobalKey globalKey = GlobalKey();
+  String data = "";
   @override
   void initState() {
     super.initState();
@@ -35,10 +40,7 @@ class _UserViewState extends State<UserView> {
       phone = user.phone;
       email = user.email;
       status = user.status;
-      qrImage = QrImage(
-        data: user.id.toString(),
-        size: 240,
-      );
+      data = user.id.toString();
     });
   }
 
@@ -158,11 +160,23 @@ class _UserViewState extends State<UserView> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 32),
-                  child: Center(child: qrImage),
+                  child: Center(
+                    child: RepaintBoundary(
+                      key: globalKey,
+                      child: QrImage(
+                        data: user.id.toString(),
+                        size: 250.0,
+                        version: QrVersions.auto,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _capturePng();
+                    },
                     child: const Text(
                       "Compartilhar QRCode",
                       style: TextStyle(color: Colors.black, fontSize: 20),
@@ -175,5 +189,15 @@ class _UserViewState extends State<UserView> {
         ),
       ),
     );
+  }
+
+  Future<void> _capturePng() async {
+    final RenderRepaintBoundary boundary =
+        globalKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final ui.Image image = await boundary.toImage();
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List pngBytes = byteData!.buffer.asUint8List();
+    print(pngBytes);
   }
 }
