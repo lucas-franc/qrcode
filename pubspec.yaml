@@ -18,6 +18,8 @@ dependencies:
   path: 1.8.2
   dropdown_button2: ^1.9.2
   flutter_masked_text2: ^0.9.1
+  qr_flutter: ^4.0.0
+  social_share: ^2.3.1
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qrcode/src/views/home/home_view.dart';
 import 'package:qrcode/src/views/register/register_view.dart';
-import 'package:qrcode/src/views/users/users_view.dart';
+import 'package:qrcode/src/views/users_list/users_list_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
@@ -37,7 +37,7 @@ class _BaseViewState extends State<BaseView> {
         body: const TabBarView(
           children: <Widget>[
             HomeView(),
-            UsersView(),
+            UsersListView(),
             RegisterView(),
           ],
         ),

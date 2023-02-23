@@ -22,7 +22,7 @@ class User {
       'name': name,
       'ocupation': ocupation,
       'cpf': cpf,
-      'phone': email,
+      'phone': phone,
       'email': email,
       'status': status,
     };
