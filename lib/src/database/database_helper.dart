@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const _databaseName = "UsersDB";
+  static const _databaseName = "users.db";
   static const _databaseVersion = 1;
   static const table = 'user';
 
@@ -73,5 +73,12 @@ CREATE TABLE $table (
   Future<int> delete(int id) async {
     Database db = await instance.database;
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Future<File> dBToCopy() async {
+    final db = await DatabaseHelper._database;
+    final dbPath = await getDatabasesPath();
+    var file = File(dbPath);
+    return file;
   }
 }

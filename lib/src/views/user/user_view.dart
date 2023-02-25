@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrcode/src/database/database_helper.dart';
 import 'package:qrcode/src/models/user.dart';
+import 'package:share_plus/share_plus.dart';
 
 class UserView extends StatefulWidget {
   final User user;
@@ -174,15 +177,16 @@ class _UserViewState extends State<UserView> {
                 ),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      _capturePng();
+                    onPressed: () async {
+                      var file = await _capturePng();
+                      Share.shareXFiles([XFile(file.path)]);
                     },
                     child: const Text(
                       "Compartilhar QRCode",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -191,13 +195,16 @@ class _UserViewState extends State<UserView> {
     );
   }
 
-  Future<void> _capturePng() async {
+  Future<File> _capturePng() async {
     final RenderRepaintBoundary boundary =
         globalKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
     final ui.Image image = await boundary.toImage();
     final ByteData? byteData =
         await image.toByteData(format: ui.ImageByteFormat.png);
     final Uint8List pngBytes = byteData!.buffer.asUint8List();
-    print(pngBytes);
+    final tempDir = await getTemporaryDirectory();
+    final file = await File('${tempDir.path}/image.png').create();
+    await file.writeAsBytes(pngBytes);
+    return file;
   }
 }
