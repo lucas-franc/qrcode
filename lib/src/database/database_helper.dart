@@ -75,10 +75,8 @@ CREATE TABLE $table (
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<File> dBToCopy() async {
-    final db = await DatabaseHelper._database;
-    final dbPath = await getDatabasesPath();
-    var file = File(dbPath);
-    return file;
+  Future<void> close() async {
+    Database db = await instance.database;
+    return await db.close();
   }
 }
