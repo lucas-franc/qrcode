@@ -33,14 +33,20 @@ class _DataCopyViewState extends State<DataCopyView> {
                   },
                 );
               },
-              child: const Text('Copy DB'),
+              child: const Text('Copiar dados'),
             ),
             ElevatedButton(
               onPressed: () async {
                 var file = await copyDatabase();
-                Share.shareXFiles([XFile(file)]);
+                Share.shareXFiles(
+                  [
+                    XFile(file),
+                  ],
+                );
               },
-              child: const Text('Copy DB'),
+              child: const Text(
+                'Compartilhar dados',
+              ),
             ),
           ],
         ),

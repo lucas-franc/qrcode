@@ -14,10 +14,11 @@ class _BaseViewState extends State<BaseView> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('Membros da Igreja'),
           centerTitle: true,
           bottom: const TabBar(
