@@ -30,6 +30,7 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
     //asynchronous delay
   }
 
+  String? name;
   String resultText = "";
 
   @override
@@ -53,10 +54,12 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
                       if (user.status == "Ativo") {
                         setState(() {
                           resultText = "Membro ativo";
+                          name = user.name;
                         });
                       } else {
                         setState(() {
                           resultText = "Membro desativado";
+                          name = user.name;
                         });
                       }
                       return;
@@ -74,18 +77,31 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
               visible: resultText == "Membro ativo",
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Container(
-                  height: 200,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.greenAccent,
-                    borderRadius: BorderRadius.circular(200),
-                  ),
-                  child: const Icon(
-                    Icons.done,
-                    size: 72,
-                    color: Colors.white,
-                  ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.greenAccent,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: const Icon(
+                        Icons.done,
+                        size: 72,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        name.toString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -93,18 +109,31 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
               visible: resultText == "Membro desativado",
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Container(
-                  height: 200,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    borderRadius: BorderRadius.circular(200),
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    size: 72,
-                    color: Colors.white,
-                  ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        size: 72,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        name.toString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )

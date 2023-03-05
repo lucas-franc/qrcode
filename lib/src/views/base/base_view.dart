@@ -19,10 +19,11 @@ class _BaseViewState extends State<BaseView> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: const Text('Membros da Igreja'),
-          centerTitle: true,
-          bottom: const TabBar(
-            tabs: <Widget>[
+          bottom: TabBar(
+            unselectedLabelColor: Colors.grey.shade600,
+            labelColor: Colors.black,
+            indicatorColor: Colors.black,
+            tabs: const <Widget>[
               Tab(
                 icon: Icon(Icons.home),
               ),

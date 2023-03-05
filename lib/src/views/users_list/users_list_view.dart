@@ -4,15 +4,18 @@ import 'package:qrcode/src/models/user.dart';
 import 'package:qrcode/src/views/user/user_view.dart';
 
 class UsersListView extends StatefulWidget {
-  const UsersListView({super.key});
+  final int? userDeleteId;
+  const UsersListView({super.key, this.userDeleteId});
 
   @override
-  State<UsersListView> createState() => _UsersListViewState();
+  State<UsersListView> createState() => UsersListViewState();
 }
 
-class _UsersListViewState extends State<UsersListView> {
+class UsersListViewState extends State<UsersListView> {
   DatabaseHelper db = DatabaseHelper.instance;
   List<User> users = [];
+
+  int? result;
   @override
   void initState() {
     super.initState();
@@ -49,8 +52,8 @@ class _UsersListViewState extends State<UsersListView> {
 
   listUsers(BuildContext context, int index) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final userId = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => UserView(
@@ -58,16 +61,28 @@ class _UsersListViewState extends State<UsersListView> {
             ),
           ),
         );
+        var $users = List<User>.from(users);
+        final user = $users.firstWhere((user) => user.id == userId);
+        $users.remove(user);
+        setState(() {
+          users = $users;
+        });
       },
       child: Card(
+        color: Colors.grey.shade100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(
+                left: 16,
+                top: 32,
+                bottom: 32,
+              ),
               child: Text(
                 users[index].name ?? "",
                 style: const TextStyle(fontSize: 16),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Visibility(

@@ -4,17 +4,18 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:qrcode/src/database/database_helper.dart';
 import 'package:qrcode/src/models/user.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({
-    super.key,
-  });
+class UserEditView extends StatefulWidget {
+  final User user;
+  const UserEditView({super.key, required this.user});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<UserEditView> createState() => _UserEditViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
-  final dbHelper = DatabaseHelper.instance;
+class _UserEditViewState extends State<UserEditView> {
+  DatabaseHelper db = DatabaseHelper.instance;
+  User user = User();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController ocupationController = TextEditingController();
   TextEditingController cpfController =
@@ -29,12 +30,30 @@ class _RegisterViewState extends State<RegisterView> {
   ];
   String? selectedValue;
   String emptyFieldError = "";
+  GlobalKey globalKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+    user = User.fromMap(
+      widget.user.toMap(),
+    );
+    setState(() {
+      ocupationController.text = user.ocupation.toString();
+      phoneController.text = user.phone.toString();
+      emailController.text = user.email.toString();
+      nameController.text = user.name.toString();
+      cpfController.text = user.cpf.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Cadastro"),
+        title: const Text("Editar"),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -113,7 +132,7 @@ class _RegisterViewState extends State<RegisterView> {
                     _verifyValues();
                   },
                   child: const Text(
-                    'Cadastrar usuário',
+                    'Editar usuário',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -131,8 +150,8 @@ class _RegisterViewState extends State<RegisterView> {
 
   void _verifyValues() {
     if (nameController.text.isNotEmpty &
-        ocupationController.text.isNotEmpty &
         cpfController.text.isNotEmpty &
+        ocupationController.text.isNotEmpty &
         phoneController.text.isNotEmpty &
         emailController.text.isNotEmpty &
         (selectedValue != null)) {
@@ -144,78 +163,9 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
-  void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            content: SizedBox(
-              height: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    nameController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    ocupationController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    cpfController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    phoneController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    emailController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    statusController.text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  _insert();
-                  _clearValues();
-                  Navigator.pop(context);
-                },
-                child: const Text("Confirmar cadastro"),
-              ),
-            ]);
-      },
-    );
-  }
-
-  void _insert() async {
-    User user = User(
+  void _update() async {
+    User userEdit = User(
+      id: user.id,
       name: nameController.text,
       ocupation: ocupationController.text,
       cpf: cpfController.text,
@@ -223,15 +173,76 @@ class _RegisterViewState extends State<RegisterView> {
       email: emailController.text,
       status: selectedValue,
     );
-    await dbHelper.insert(user.toMap());
+    await db.update(userEdit);
   }
 
-  void _clearValues() {
-    nameController.clear();
-    ocupationController.clear();
-    cpfController.clear();
-    phoneController.clear();
-    emailController.clear();
-    statusController.clear();
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name.toString(),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  ocupationController.text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  user.cpf.toString(),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  phoneController.text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  emailController.text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  statusController.text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                _update();
+                Navigator.pop(context);
+              },
+              child: const Text("Confirmar edição"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
