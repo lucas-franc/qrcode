@@ -63,10 +63,6 @@ class _QrCodeScannerViewState extends State<QrCodeScannerView> {
                         });
                       }
                       return;
-                    } else {
-                      setState(() {
-                        resultText = 'Membro não existe';
-                      });
                     }
                   }
                 },

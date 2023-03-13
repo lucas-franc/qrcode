@@ -20,7 +20,7 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController cpfController =
       MaskedTextController(mask: "000.000.000-00");
   TextEditingController phoneController =
-      MaskedTextController(mask: "(00) 00 00000-0000");
+      MaskedTextController(mask: "(55) 00 00000-0000");
   TextEditingController emailController = TextEditingController();
   TextEditingController statusController = TextEditingController();
   final List<String> items = [
@@ -52,23 +52,26 @@ class _RegisterViewState extends State<RegisterView> {
                 TextField(
                   controller: ocupationController,
                   decoration: const InputDecoration(
-                    label: Text("Função"),
+                    label: Text("Cargo"),
                   ),
                 ),
                 TextField(
                   controller: cpfController,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     label: Text("CPF"),
                   ),
                 ),
                 TextField(
                   controller: phoneController,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    label: Text("Phone"),
+                    label: Text("Telefone"),
                   ),
                 ),
                 TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     label: Text("Email"),
                   ),

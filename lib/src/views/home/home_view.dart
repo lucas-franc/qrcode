@@ -139,16 +139,19 @@ class _HomeViewState extends State<HomeView> {
                     ElevatedButton(
                       onPressed: () async {
                         db.close().then((value) {
-                          selectDatabaseCopy();
-                          final snackBar = SnackBar(
-                            content: const Text('Backup restaurado'),
-                            action: SnackBarAction(
-                              label: 'Fechar',
-                              onPressed: () {},
-                            ),
+                          selectDatabaseCopy().then(
+                            (value) {
+                              final snackBar = SnackBar(
+                                content: const Text('Backup restaurado'),
+                                action: SnackBarAction(
+                                  label: 'Fechar',
+                                  onPressed: () {},
+                                ),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
                           );
-
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         });
                       },
                       child: const Padding(

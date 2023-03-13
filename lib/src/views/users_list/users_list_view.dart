@@ -61,12 +61,22 @@ class UsersListViewState extends State<UsersListView> {
             ),
           ),
         );
-        var $users = List<User>.from(users);
-        final user = $users.firstWhere((user) => user.id == userId);
-        $users.remove(user);
-        setState(() {
-          users = $users;
-        });
+        if (userId != null) {
+          var $users = List<User>.from(users);
+          final user = $users.firstWhere((user) => user.id == userId);
+          $users.remove(user);
+          setState(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "Usuário excluído",
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+            users = $users;
+          });
+        }
       },
       child: Card(
         color: Colors.grey.shade100,

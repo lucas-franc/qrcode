@@ -256,14 +256,9 @@ class _UserViewState extends State<UserView> {
                                   ),
                                 ),
                               ).then(
-                                (value) =>
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Usuário editado com sucesso",
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ),
+                                (userId) => Navigator.pop(
+                                  context,
+                                  userId,
                                 ),
                               );
                             },
@@ -271,20 +266,19 @@ class _UserViewState extends State<UserView> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(
-                                    MaterialPageRoute(
-                                      builder: (context) => UserDeleteView(
-                                        user: user,
-                                      ),
-                                    ),
-                                  )
-                                  .then(
-                                    (userId) => Navigator.pop(
-                                      context,
-                                      userId,
-                                    ),
-                                  );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserDeleteView(
+                                    user: user,
+                                  ),
+                                ),
+                              ).then(
+                                (userId) => Navigator.pop(
+                                  context,
+                                  userId,
+                                ),
+                              );
                             },
                             child: const Text(
                               "Excluir membro",
